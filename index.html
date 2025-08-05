@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Textured Model on Scroll</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="canvas-container"></div>
+    <div id="content">
+        <section>
+            <h1>Textured 3D Model</h1>
+            <p>Scroll down to rotate the model with its color texture.</p>
+        </section>
+        <section>
+            <h2>OBJ and PNG</h2>
+            <p>This model is loaded from an OBJ file and textured with a PNG image.</p>
+        </section>
+        <section>
+            <h2>End of Rotation</h2>
+            <p>You have now seen the complete model.</p>
+        </section>
+    </div>
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.164.1/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.164.1/examples/jsm/"
+            }
+        }
+    </script>
+    <script src="main.js" type="module"></script>
+</body>
+
+</html>
