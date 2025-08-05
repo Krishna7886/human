@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Model with Side Content</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="main-container">
+        <div id="content">
+            <section>
+                <h1>Textured 3D Model</h1>
+                <p>The 3D model on the right will rotate as you scroll through this content.</p>
+            </section>
+            <section>
+                <h2>Anatomy Viewer</h2>
+                <p>This layout is ideal for product showcases or educational content.</p>
+            </section>
+            <section>
+                <h2>Technical Details</h2>
+                <p>This is achieved using CSS Flexbox for the layout, with a `position: sticky` canvas on the right.</p>
+            </section>
+            <section>
+                <h2>End of Scroll</h2>
+                <p>You have reached the end of the content.</p>
+            </section>
+        </div>
+        <div id="canvas-container"></div>
+    </div>
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.164.1/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.164.1/examples/jsm/"
+            }
+        }
+    </script>
+    <script src="main.js" type="module"></script>
+</body>
+
+</html>
