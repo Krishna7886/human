@@ -1,21 +1,21 @@
-```html
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Romantic Portrait Studio</title>
+    <title>Wedding Portrait Studio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            background-color: #fff1f2;
-            background-image: radial-gradient(circle at top right, #ffe4e6, #fff1f2);
+            background-color: #fdfbf7;
+            background-image: radial-gradient(circle at center, #ffffff, #fdfbf7);
         }
         .loader { 
-            border: 4px solid #fecdd3; 
-            border-top: 4px solid #e11d48; 
+            border: 4px solid #fef3c7; 
+            border-top: 4px solid #d97706; 
             border-radius: 50%; 
             width: 48px; 
             height: 48px; 
@@ -28,35 +28,35 @@
     </style>
 </head>
 <body class="min-h-screen p-4 md:p-8 flex items-center justify-center">
-    <div class="max-w-xl w-full bg-white rounded-3xl shadow-xl overflow-hidden p-6 md:p-8 space-y-6 border border-rose-100">
+    <div class="max-w-xl w-full bg-white rounded-3xl shadow-2xl overflow-hidden p-6 md:p-8 space-y-6 border border-amber-100">
         <div class="text-center">
-            <h1 class="text-3xl font-extrabold text-rose-900 tracking-tight flex justify-center items-center gap-2">
-                <i class="fa-solid fa-heart text-rose-500"></i> Romantic Studio
+            <h1 class="text-3xl font-extrabold text-amber-900 tracking-tight flex items-center justify-center gap-3">
+                <i class="fa-solid fa-ring text-amber-500"></i> Wedding Studio
             </h1>
-            <p class="text-rose-600 text-sm mt-2">Upload your photo to capture a beautiful, romantic moment.</p>
+            <p class="text-stone-500 text-sm mt-2">Upload your photo to see yourselves on your beautiful marriage day.</p>
         </div>
 
         <!-- Upload Area -->
-        <div id="uploadArea" class="border-2 border-dashed border-rose-300 bg-rose-50 rounded-2xl p-10 text-center cursor-pointer hover:bg-rose-100 transition-all hover:border-rose-400 group">
-            <i class="fa-regular fa-image text-5xl text-rose-400 group-hover:text-rose-500 transition-colors mb-4"></i>
-            <p class="text-rose-800 font-medium text-lg">Tap to select your photo</p>
-            <p class="text-rose-400 text-sm mt-1">JPEG or PNG</p>
+        <div id="uploadArea" class="border-2 border-dashed border-amber-200 bg-amber-50/30 rounded-2xl p-10 text-center cursor-pointer hover:bg-amber-50 transition-all hover:border-amber-400 group">
+            <i class="fa-solid fa-camera-retro text-5xl text-amber-300 group-hover:text-amber-500 transition-colors mb-4"></i>
+            <p class="text-amber-900 font-medium text-lg">Tap to select your photo</p>
+            <p class="text-amber-500/70 text-sm mt-1">JPEG or PNG</p>
             <input type="file" id="fileInput" class="hidden" accept="image/*">
         </div>
 
         <!-- Preview & Controls Area -->
         <div id="controlsArea" class="hidden space-y-5">
-            <div class="relative w-full h-64 bg-slate-50 rounded-2xl overflow-hidden flex justify-center border border-rose-100 shadow-inner">
+            <div class="relative w-full h-64 bg-stone-50 rounded-2xl overflow-hidden flex justify-center border border-amber-100 shadow-inner">
                 <img id="previewImage" class="object-contain h-full w-full" alt="Reference">
             </div>
             
             <div>
-                <label class="block text-sm font-medium text-rose-800 mb-2">Applied Configuration (Including your consistency preferences)</label>
-                <textarea id="promptInput" rows="6" class="w-full border border-rose-200 rounded-xl p-4 text-sm focus:ring-2 focus:ring-rose-400 focus:border-rose-400 outline-none text-slate-700 leading-relaxed bg-white shadow-sm" readonly>A beautiful, romantic photo of the couple sharing a gentle kiss. Enable strict facial consistency mode. Prioritize the facial features from the provided reference image for all subsequent generations. Maintain the subject's identity accurately while only adapting the pose, lighting, and background. Do not alter the core facial structure.</textarea>
+                <label class="block text-sm font-medium text-amber-900 mb-2">Applied Configuration (Including consistency rules)</label>
+                <textarea id="promptInput" rows="6" class="w-full border border-amber-200 rounded-xl p-4 text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none text-stone-700 leading-relaxed bg-white shadow-sm" readonly>A beautiful, cinematic wedding photo of the couple on their marriage day. The woman is wearing a stunning white wedding dress and the man is in an elegant tuxedo. They are standing together at a beautifully decorated wedding venue with soft, romantic lighting. Enable strict facial consistency mode. Prioritize the facial features from the provided reference image for all subsequent generations. Maintain the subject's identity accurately while only adapting the pose, lighting, and background. Do not alter the core facial structure.</textarea>
             </div>
 
-            <button id="generateBtn" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-semibold py-4 px-4 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-3 text-lg transform hover:-translate-y-0.5">
-                <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Image
+            <button id="generateBtn" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-4 px-4 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-3 text-lg transform hover:-translate-y-0.5">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Create Wedding Photo
             </button>
         </div>
 
@@ -64,17 +64,17 @@
         <div id="loadingArea" class="hidden flex-col items-center justify-center py-12 space-y-6">
             <div class="loader"></div>
             <div class="text-center">
-                <p class="text-rose-900 font-bold text-xl">Creating your moment...</p>
-                <p class="text-sm text-rose-600 mt-2 px-4 max-w-sm mx-auto">Please wait 10-20 seconds. We are carefully matching your facial features.</p>
+                <p class="text-amber-900 font-bold text-xl">Preparing your special day...</p>
+                <p class="text-sm text-stone-500 mt-2 px-4 max-w-sm mx-auto">Please wait 10-20 seconds. We are carefully matching your facial features and dressing you in wedding attire.</p>
             </div>
         </div>
 
         <!-- Result Area -->
         <div id="resultArea" class="hidden space-y-5">
-            <div class="relative w-full rounded-2xl overflow-hidden shadow-xl border border-rose-100">
+            <div class="relative w-full rounded-2xl overflow-hidden shadow-xl border border-amber-100">
                 <img id="resultImage" class="w-full h-auto object-cover" alt="Generated Result">
             </div>
-            <button onclick="location.reload()" class="w-full bg-rose-50 hover:bg-rose-100 text-rose-800 font-semibold py-4 px-4 rounded-xl transition-colors shadow-sm flex items-center justify-center gap-2 border border-rose-200">
+            <button onclick="location.reload()" class="w-full bg-stone-100 hover:bg-stone-200 text-stone-800 font-semibold py-4 px-4 rounded-xl transition-colors shadow-sm flex items-center justify-center gap-2 border border-stone-200">
                 <i class="fa-solid fa-arrow-rotate-left"></i> Create Another
             </button>
         </div>
@@ -193,5 +193,3 @@
 </body>
 </html>
 
-
-```
