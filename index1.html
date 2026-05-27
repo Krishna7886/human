@@ -1,0 +1,197 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Romantic Portrait Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            background-color: #fff1f2;
+            background-image: radial-gradient(circle at top right, #ffe4e6, #fff1f2);
+        }
+        .loader { 
+            border: 4px solid #fecdd3; 
+            border-top: 4px solid #e11d48; 
+            border-radius: 50%; 
+            width: 48px; 
+            height: 48px; 
+            animation: spin 1s linear infinite; 
+        }
+        @keyframes spin { 
+            0% { transform: rotate(0deg); } 
+            100% { transform: rotate(360deg); } 
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 flex items-center justify-center">
+    <div class="max-w-xl w-full bg-white rounded-3xl shadow-xl overflow-hidden p-6 md:p-8 space-y-6 border border-rose-100">
+        <div class="text-center">
+            <h1 class="text-3xl font-extrabold text-rose-900 tracking-tight flex justify-center items-center gap-2">
+                <i class="fa-solid fa-heart text-rose-500"></i> Romantic Studio
+            </h1>
+            <p class="text-rose-600 text-sm mt-2">Upload your photo to capture a beautiful, romantic moment.</p>
+        </div>
+
+        <!-- Upload Area -->
+        <div id="uploadArea" class="border-2 border-dashed border-rose-300 bg-rose-50 rounded-2xl p-10 text-center cursor-pointer hover:bg-rose-100 transition-all hover:border-rose-400 group">
+            <i class="fa-regular fa-image text-5xl text-rose-400 group-hover:text-rose-500 transition-colors mb-4"></i>
+            <p class="text-rose-800 font-medium text-lg">Tap to select your photo</p>
+            <p class="text-rose-400 text-sm mt-1">JPEG or PNG</p>
+            <input type="file" id="fileInput" class="hidden" accept="image/*">
+        </div>
+
+        <!-- Preview & Controls Area -->
+        <div id="controlsArea" class="hidden space-y-5">
+            <div class="relative w-full h-64 bg-slate-50 rounded-2xl overflow-hidden flex justify-center border border-rose-100 shadow-inner">
+                <img id="previewImage" class="object-contain h-full w-full" alt="Reference">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-rose-800 mb-2">Applied Configuration (Including your consistency preferences)</label>
+                <textarea id="promptInput" rows="6" class="w-full border border-rose-200 rounded-xl p-4 text-sm focus:ring-2 focus:ring-rose-400 focus:border-rose-400 outline-none text-slate-700 leading-relaxed bg-white shadow-sm" readonly>A beautiful, romantic photo of the couple sharing a gentle kiss. Enable strict facial consistency mode. Prioritize the facial features from the provided reference image for all subsequent generations. Maintain the subject's identity accurately while only adapting the pose, lighting, and background. Do not alter the core facial structure.</textarea>
+            </div>
+
+            <button id="generateBtn" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-semibold py-4 px-4 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-3 text-lg transform hover:-translate-y-0.5">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Image
+            </button>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingArea" class="hidden flex-col items-center justify-center py-12 space-y-6">
+            <div class="loader"></div>
+            <div class="text-center">
+                <p class="text-rose-900 font-bold text-xl">Creating your moment...</p>
+                <p class="text-sm text-rose-600 mt-2 px-4 max-w-sm mx-auto">Please wait 10-20 seconds. We are carefully matching your facial features.</p>
+            </div>
+        </div>
+
+        <!-- Result Area -->
+        <div id="resultArea" class="hidden space-y-5">
+            <div class="relative w-full rounded-2xl overflow-hidden shadow-xl border border-rose-100">
+                <img id="resultImage" class="w-full h-auto object-cover" alt="Generated Result">
+            </div>
+            <button onclick="location.reload()" class="w-full bg-rose-50 hover:bg-rose-100 text-rose-800 font-semibold py-4 px-4 rounded-xl transition-colors shadow-sm flex items-center justify-center gap-2 border border-rose-200">
+                <i class="fa-solid fa-arrow-rotate-left"></i> Create Another
+            </button>
+        </div>
+        
+        <!-- Error Area -->
+        <div id="errorArea" class="hidden bg-red-50 text-red-600 p-4 rounded-xl text-sm text-center border border-red-100">
+        </div>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const controlsArea = document.getElementById('controlsArea');
+        const previewImage = document.getElementById('previewImage');
+        const generateBtn = document.getElementById('generateBtn');
+        const loadingArea = document.getElementById('loadingArea');
+        const resultArea = document.getElementById('resultArea');
+        const resultImage = document.getElementById('resultImage');
+        const errorArea = document.getElementById('errorArea');
+        const promptInput = document.getElementById('promptInput');
+
+        let currentBase64 = null;
+        let currentMimeType = null;
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const dataUrl = event.target.result;
+                    previewImage.src = dataUrl;
+                    
+                    const match = dataUrl.match(/^data:(image\/[a-zA-Z0-9]+);base64,(.+)$/);
+                    if (match) {
+                        currentMimeType = match[1];
+                        currentBase64 = match[2];
+                        
+                        uploadArea.classList.add('hidden');
+                        controlsArea.classList.remove('hidden');
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        async function fetchWithRetry(url, options, retries = 5) {
+            const delays = [1000, 2000, 4000, 8000, 16000];
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (!response.ok) {
+                        throw new Error(`Server returned status ${response.status}`);
+                    }
+                    return await response.json();
+                } catch (error) {
+                    if (i === retries - 1) throw error;
+                    await new Promise(res => setTimeout(res, delays[i]));
+                }
+            }
+        }
+
+        generateBtn.addEventListener('click', async () => {
+            if (!currentBase64) return;
+            
+            controlsArea.classList.add('hidden');
+            loadingArea.classList.remove('hidden');
+            loadingArea.classList.add('flex');
+            errorArea.classList.add('hidden');
+
+            const apiKey = ""; 
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent?key=${apiKey}`;
+            
+            const payload = {
+                contents: [{
+                    role: "user",
+                    parts: [
+                        { text: promptInput.value },
+                        { inlineData: { mimeType: currentMimeType, data: currentBase64 } }
+                    ]
+                }],
+                generationConfig: {
+                    responseModalities: ["TEXT", "IMAGE"]
+                }
+            };
+
+            try {
+                const result = await fetchWithRetry(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const base64Part = result.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData;
+                
+                if (base64Part && base64Part.data) {
+                    resultImage.src = `data:${base64Part.mimeType || 'image/png'};base64,${base64Part.data}`;
+                    
+                    loadingArea.classList.add('hidden');
+                    loadingArea.classList.remove('flex');
+                    resultArea.classList.remove('hidden');
+                } else {
+                    throw new Error("No image data returned from the API.");
+                }
+
+            } catch (err) {
+                loadingArea.classList.add('hidden');
+                loadingArea.classList.remove('flex');
+                controlsArea.classList.remove('hidden');
+                errorArea.textContent = `Error generating image: ${err.message}. Please try again.`;
+                errorArea.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+```
